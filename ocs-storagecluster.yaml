@@ -1,0 +1,195 @@
+apiVersion: ocs.openshift.io/v1
+kind: StorageCluster
+metadata:
+  annotations:
+    cluster.ocs.openshift.io/local-devices: "true"
+    uninstall.ocs.openshift.io/cleanup-policy: delete
+    uninstall.ocs.openshift.io/mode: graceful
+  creationTimestamp: "2024-11-08T16:33:36Z"
+  finalizers:
+  - storagecluster.ocs.openshift.io
+  generation: 4
+  name: ocs-storagecluster
+  namespace: openshift-storage
+  ownerReferences:
+  - apiVersion: odf.openshift.io/v1alpha1
+    kind: StorageSystem
+    name: ocs-storagecluster-storagesystem
+    uid: 78d2dbc7-dd73-47a8-80fe-45a68518ac07
+  resourceVersion: "534257"
+  uid: 328478e0-ceb2-41af-b3b2-df4feaf80c24
+spec:
+  arbiter: {}
+  encryption:
+    keyRotation:
+      schedule: '@weekly'
+    kms: {}
+  externalStorage: {}
+  flexibleScaling: true
+  managedResources:
+    cephBlockPools: {}
+    cephCluster: {}
+    cephConfig: {}
+    cephDashboard: {}
+    cephFilesystems:
+      dataPoolSpec:
+        application: ""
+        erasureCoded:
+          codingChunks: 0
+          dataChunks: 0
+        mirroring: {}
+        quotas: {}
+        replicated:
+          size: 0
+        statusCheck:
+          mirror: {}
+    cephNonResilientPools:
+      count: 1
+      resources: {}
+      volumeClaimTemplate:
+        metadata: {}
+        spec:
+          resources: {}
+        status: {}
+    cephObjectStoreUsers: {}
+    cephObjectStores: {}
+    cephRBDMirror:
+      daemonCount: 1
+    cephToolbox: {}
+  mirroring: {}
+  monDataDirHostPath: /var/lib/rook
+  network:
+    connections:
+      encryption: {}
+    multiClusterService: {}
+    provider: multus
+    selectors:
+      cluster: openshift-storage/odf-private
+      public: openshift-storage/odf-public
+  nodeTopologies: {}
+  resourceProfile: balanced
+  storageDeviceSets:
+  # This is the device set created when ODF was installed.
+  - config: {}
+    count: 6
+    dataPVCTemplate:
+      metadata: {}
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: "1"
+        storageClassName: local-nvme    # <====
+        volumeMode: Block
+      status: {}
+    name: ocs-deviceset-local-nvme      # <====
+    placement: {}
+    preparePlacement: {}
+    replica: 1
+    resources: {}
+  # This is the device set for the RAID-6 devices
+  - config: {}
+    count: 6
+    dataPVCTemplate:
+      metadata: {}
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: "1"
+        storageClassName: local-raid6   # <====
+        volumeMode: Block
+      status: {}
+    deviceClass: raid6                  # <====  NEED TO ADD THIS!!!
+    name: ocs-deviceset-local-raid6     # <====
+    placement: {}
+    preparePlacement: {}
+    replica: 1
+    resources: {}
+status:
+  conditions:
+  - lastHeartbeatTime: "2024-11-08T16:33:36Z"
+    lastTransitionTime: "2024-11-08T16:33:36Z"
+    message: Version check successful
+    reason: VersionMatched
+    status: "False"
+    type: VersionMismatch
+  - lastHeartbeatTime: "2024-11-08T20:33:32Z"
+    lastTransitionTime: "2024-11-08T16:50:07Z"
+    message: Reconcile completed successfully
+    reason: ReconcileCompleted
+    status: "True"
+    type: ReconcileComplete
+  - lastHeartbeatTime: "2024-11-08T20:33:32Z"
+    lastTransitionTime: "2024-11-08T16:50:07Z"
+    message: Reconcile completed successfully
+    reason: ReconcileCompleted
+    status: "True"
+    type: Available
+  - lastHeartbeatTime: "2024-11-08T20:33:32Z"
+    lastTransitionTime: "2024-11-08T20:21:20Z"
+    message: Reconcile completed successfully
+    reason: ReconcileCompleted
+    status: "False"
+    type: Progressing
+  - lastHeartbeatTime: "2024-11-08T20:33:32Z"
+    lastTransitionTime: "2024-11-08T16:33:36Z"
+    message: Reconcile completed successfully
+    reason: ReconcileCompleted
+    status: "False"
+    type: Degraded
+  - lastHeartbeatTime: "2024-11-08T20:33:32Z"
+    lastTransitionTime: "2024-11-08T20:21:20Z"
+    message: Reconcile completed successfully
+    reason: ReconcileCompleted
+    status: "True"
+    type: Upgradeable
+  currentMonCount: 3
+  defaultCephDeviceClass: ssd
+  failureDomain: host
+  failureDomainKey: kubernetes.io/hostname
+  failureDomainValues:
+  - smicro-6029p-01.ocpbm.eng.rdu2.dc.redhat.com
+  - smicro-6029p-02.ocpbm.eng.rdu2.dc.redhat.com
+  - smicro-6029p-03.ocpbm.eng.rdu2.dc.redhat.com
+  - smicro-6029p-04.ocpbm.eng.rdu2.dc.redhat.com
+  - smicro-6029p-05.ocpbm.eng.rdu2.dc.redhat.com
+  - smicro-6029p-06.ocpbm.eng.rdu2.dc.redhat.com
+  images:
+    ceph:
+      actualImage: registry.redhat.io/rhceph/rhceph-7-rhel9@sha256:75bd8969ab3f86f2203a1ceb187876f44e54c9ee3b917518c4d696cf6cd88ce3
+      desiredImage: registry.redhat.io/rhceph/rhceph-7-rhel9@sha256:75bd8969ab3f86f2203a1ceb187876f44e54c9ee3b917518c4d696cf6cd88ce3
+    noobaaCore:
+      actualImage: registry.redhat.io/odf4/mcg-core-rhel9@sha256:49a182ac75acc345de55f75dbb40fb0a64f636e19cafc2e3dff908bb15c294ba
+      desiredImage: registry.redhat.io/odf4/mcg-core-rhel9@sha256:49a182ac75acc345de55f75dbb40fb0a64f636e19cafc2e3dff908bb15c294ba
+    noobaaDB:
+      actualImage: registry.redhat.io/rhel9/postgresql-15@sha256:92808c81661c3289ff027a06f6acd40b3937c43c3ba8e69b6d808b48e2e083ba
+      desiredImage: registry.redhat.io/rhel9/postgresql-15@sha256:92808c81661c3289ff027a06f6acd40b3937c43c3ba8e69b6d808b48e2e083ba
+  kmsServerConnection: {}
+  lastAppliedResourceProfile: balanced
+  nodeTopologies:
+    labels:
+      kubernetes.io/hostname:
+      - smicro-6029p-01.ocpbm.eng.rdu2.dc.redhat.com
+      - smicro-6029p-02.ocpbm.eng.rdu2.dc.redhat.com
+      - smicro-6029p-03.ocpbm.eng.rdu2.dc.redhat.com
+      - smicro-6029p-04.ocpbm.eng.rdu2.dc.redhat.com
+      - smicro-6029p-05.ocpbm.eng.rdu2.dc.redhat.com
+      - smicro-6029p-06.ocpbm.eng.rdu2.dc.redhat.com
+  phase: Ready
+  relatedObjects:
+  - apiVersion: ceph.rook.io/v1
+    kind: CephCluster
+    name: ocs-storagecluster-cephcluster
+    namespace: openshift-storage
+    resourceVersion: "534246"
+    uid: eb465dbd-b876-40d3-93e9-47561267c76c
+  - apiVersion: noobaa.io/v1alpha1
+    kind: NooBaa
+    name: noobaa
+    namespace: openshift-storage
+    resourceVersion: "534216"
+    uid: 2fa0cc58-2a11-4c5b-9541-f7043a849260
+  version: 4.17.0

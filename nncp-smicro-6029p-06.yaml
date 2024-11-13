@@ -1,0 +1,47 @@
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: smicro-6029p-06
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: smicro-6029p-06.ocpbm.eng.rdu2.dc.redhat.com
+  desiredState:
+    interfaces:
+      - name: enp27s0f0
+        state: up
+        mtu: 9000
+      - name: enp27s0f0.2048
+        state: up
+        mtu: 9000
+        type: vlan
+        vlan:
+          base-iface: enp27s0f0
+          id: 2048
+      - name: enp27s0f0.2049
+        state: up
+        mtu: 9000
+        type: vlan
+        vlan:
+          base-iface: enp27s0f0
+          id: 2049
+      - name: enp27s0f0.2050
+        state: up
+        mtu: 9000
+        type: vlan
+        vlan:
+          base-iface: enp27s0f0
+          id: 2050
+      - name: odf-public
+        state: up
+        mtu: 9000
+        type: mac-vlan
+        mac-vlan:
+          base-iface: enp27s0f0.2048
+          mode: bridge
+          promiscuous: true
+        ipv4:
+          enabled: true
+          dhcp: false
+          address:
+            - ip: 192.168.255.246
+              prefix-length: 20
